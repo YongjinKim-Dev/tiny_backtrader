@@ -37,7 +37,7 @@ If you prefer to keep `tiny_backtrader` at the same directory level as your own 
 Your project might look like this:
 
 ~~~
-my_project/
+tiny_backtrader/
 ├── tiny_backtrader/
 │   ├── engine.py
 │   └── ...
