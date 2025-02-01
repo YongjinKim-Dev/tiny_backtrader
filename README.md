@@ -4,45 +4,61 @@ tiny_backtrader is a lightweight Python library for backtesting trading strategi
 
 ## Features
 
-- Flexible Data Input
+- Flexible Data Input  
   Accepts either a list of dictionaries (each containing date, open, high, low, close, volume, etc.) or a pandas DataFrame.
 
-- Pluggable Strategy
-  Easily inject custom buy/sell conditions by defining simple Python functions (or lambdas) and passing them to the Strategy class.
+- Pluggable Strategy  
+  Easily inject custom buy/sell conditions by defining simple Python functions (or lambdas) and passing them to the `Strategy` class.
 
-- Slippage & Fees
-  Simulate real-world trading conditions by specifying slippage (sl) and transaction fees (fee).
+- Slippage & Fees  
+  Simulate real-world trading conditions by specifying slippage (`sl`) and transaction fees (`fee`).
 
-- Intraday or Daily Support
+- Intraday or Daily Support  
   Works with any time-based granularity. You can set the start/end parameters to include full date-time strings if necessary.
 
-- Results & Reporting
+- Results & Reporting  
   Returns a list of executed trades, final capital, total profit, and the percentage yield.
 
 ## Installation
 
-Simply clone this repository and import the modules directly from the project files:
+Simply clone this repository and place the `tiny_backtrader` directory where your Python code can import it:
 
 ~~~bash
 git clone https://github.com/username/tiny_backtrader.git
 cd tiny_backtrader
 ~~~
 
+If you prefer to keep `tiny_backtrader` at the same directory level as your own script (e.g., `example.py`), Python will automatically find it when using relative imports. Otherwise, make sure to add its path to your `PYTHONPATH`.
+
 ## Usage
+
+### Directory Example
+
+Your project might look like this:
+
+~~~
+my_project/
+├── tiny_backtrader/
+│   ├── engine.py
+│   └── ...
+└── example.py
+~~~
 
 ### 1. Run with an Example
 
-The following example assumes you have Python 3 installed.
-Copy and paste this entire code snippet into a file (e.g., `example.py`), then run `python example.py`.
+The following example assumes you have Python 3 installed.  
+Copy and paste this entire code snippet into a file (e.g., `example.py`) at the same directory level as `tiny_backtrader` (see above structure), then run:
+
+~~~bash
+python example.py
+~~~
 
 ~~~python
 import pandas as pd
 
-# If you're running locally, ensure the path to tiny_backtrader is correct:
-# For example: from tiny_backtrader.engine import run_backtest, Strategy
+# If you're running locally and the tiny_backtrader folder is in the same directory:
 from tiny_backtrader.engine import run_backtest, Strategy
 
-# Sample data with a pre-computed MA (moving average) column
 data = [
     {'date': '2022-01-01', 'open': '99', 'high': '101', 'low': '98', 'close': '100', 'volume': '1000', 'ma': '99.5'},
     {'date': '2022-01-02', 'open': '104','high': '106','low': '103','close': '105','volume': '1100','ma': '102'},
@@ -50,28 +66,24 @@ data = [
     {'date': '2022-01-04', 'open': '105','high': '106','low': '104','close': '105','volume': '1300','ma': '104.5'}
 ]
 
-# Convert to DataFrame if desired:
 df = pd.DataFrame(data)
 
 def buy_condition(dataset, i):
-    if i == 0:
-        return False
+    if i == 0: return False
     close = float(dataset[i]['close'])
     ma_val = float(dataset[i]['ma'])
     return close < ma_val
 
 def sell_condition(dataset, i):
-    if i == 0:
-        return False
+    if i == 0: return False
     close = float(dataset[i]['close'])
     ma_val = float(dataset[i]['ma'])
     return close > ma_val
 
 my_strategy = Strategy(buy=buy_condition, sell=sell_condition)
 
-# Run backtest
 trades, final_capital, profit, yield_pct = run_backtest(
-    df,             # or data
+    df,
     cap=10000,
     start="2022-01-01",
     end="2022-01-04",
