@@ -1,0 +1,9 @@
+# .gitignore
+
+# Ignore Python bytecode and cache directories
+__pycache__/
+*.py[cod]
+
+# Ignore cache directories in specific project folders
+test/__pycache__/
+tiny_backtrader/__pycache__/
